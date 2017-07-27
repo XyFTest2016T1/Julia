@@ -1,5 +1,6 @@
 # model of the ARPA-E Competition
 using Ipopt, Complementarity;
+#using Knitro, Complementarity;
 
 function buildMod(fData,uData)
   # Input:
@@ -22,6 +23,7 @@ function buildMod(fData,uData)
 
   # set up the model
   mp = Model(solver = IpoptSolver());
+  #mp = Model(solver = KnitroSolver());
 
   # create the variables for the base case
   @variable(mp,bData[i].Vmin <= v0[i in bList] <= bData[i].Vmax);
@@ -34,7 +36,7 @@ function buildMod(fData,uData)
   @variable(mp,theta0[i in bList]);
 
   # create the constraints for the base case
-  @NLconstraint(mp,flowBound0[k in brList],p0[k]^2 + q0[k]^2 <= brData[k].t);
+  @NLconstraint(mp,flowBound0[k in brList],p0[k]^2 + q0[k]^2 <= brData[k].t^2);
   @NLconstraint(mp,pShunt0[i in bList],psh0[i] == bData[i].gsh*v0[i]^2);
   @NLconstraint(mp,qShunt0[i in bList],qsh0[i] == -bData[i].bsh*v0[i]^2);
   @NLconstraint(mp,pFlow0[k in brList;brData[k].zeroImpe == false], p0[k] == brData[k].g/(brData[k].tauprime^2)*v0[brData[k].From]^2
@@ -64,7 +66,7 @@ function buildMod(fData,uData)
   @variable(mp,pdelta[s in S]);
 
   # create the constraints for the base case
-  @NLconstraint(mp,flowBoundS[k in brList, s in S],p[k,s]^2 + q[k,s]^2 <= brData[k].t);
+  @NLconstraint(mp,flowBoundS[k in brList, s in S],p[k,s]^2 + q[k,s]^2 <= brData[k].t^2);
   @NLconstraint(mp,pShuntS[i in bList, s in S],psh[i,s] == bData[i].gsh*v[i,s]^2);
   @NLconstraint(mp,qShuntS[i in bList, s in S],qsh[i,s] == -bData[i].bsh*v[i,s]^2);
   @NLconstraint(mp,pFlowS[k in brList, s in S;(brData[k].zeroImpe == false)&(!(k in contDList[s].Loc))], p[k,s] == brData[k].g/(brData[k].tauprime^2)*v[brData[k].From,s]^2
