@@ -1,7 +1,6 @@
 # model of the ARPA-E Competition
 using Ipopt, Complementarity;
 #using Knitro, Complementarity;
-# test git JH
 
 function buildMod(fData,uData)
   # Input:
