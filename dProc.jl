@@ -7,7 +7,7 @@ function preProc(fileAdd)
   # separate the data into different segments
   titleLine = rawData[1,:];
   n,m = size(rawData);
-  busStartL = 2;
+  busStartL = 4;
   busEndL = 0
   loadStartL = 0
   loadEndL = 0
