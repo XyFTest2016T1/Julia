@@ -2,7 +2,7 @@
 
 # preprocessing: read in the data and divide it into segments
 function preProc(fileAdd)
-  rawData = readdlm(fileAdd,',');
+  rawData = readdlm(fileAdd,',', skipblanks=false);
 
   # separate the data into different segments
   titleLine = rawData[1,:];
